@@ -1,4 +1,10 @@
 import pytest
+import sys, os
+
+# Ensure Python can import main.py from the parent folder
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+import main
+print("Using main.py from:", main.__file__)  # Debug line
 from main import prim_mst
 
 
@@ -11,7 +17,6 @@ def normalize_edges(edge_list):
 
 
 # Normal tests (4)
-
 
 def test_simple_triangle():
     graph = {
@@ -35,7 +40,7 @@ def test_square_graph():
     }
     mst_edges, total_cost = prim_mst(graph, "A")
     assert len(mst_edges) == 3
-    assert total_cost == 1 + 2 + 1  # 4
+    assert total_cost == 4
 
 
 def test_chain_graph():
@@ -47,7 +52,7 @@ def test_chain_graph():
     }
     mst_edges, total_cost = prim_mst(graph, "G1")
     assert len(mst_edges) == 3
-    assert total_cost == 2 + 3 + 1
+    assert total_cost == 6
 
 
 def test_two_possible_msts_same_cost():
@@ -62,7 +67,6 @@ def test_two_possible_msts_same_cost():
 
 
 # Edge-case tests (3)
-
 
 def test_single_node_graph():
     graph = {"Solo": []}
@@ -98,7 +102,6 @@ def test_graph_with_heavier_extra_edges():
 
 # Complex tests (3)
 
-
 def test_larger_graph_multiple_branches():
     graph = {
         "H1": [("H2", 3), ("H3", 2)],
@@ -109,7 +112,6 @@ def test_larger_graph_multiple_branches():
     }
     mst_edges, total_cost = prim_mst(graph, "H1")
     assert len(mst_edges) == 4
-    # One MST: H1-H3 (2), H3-H5 (1), H1-H2 (3), H2-H4 (4) => 10
     assert total_cost == 10
 
 
@@ -136,4 +138,5 @@ def test_graph_with_many_edges():
     }
     mst_edges, total_cost = prim_mst(graph, "A")
     assert len(mst_edges) == 3
-    assert total_cost == 1 + 1 + 3  # C-D, A-C, A-B or similar
+    # Correct MST edges: A-C (1), C-D (1), C-B (2) => total cost 4
+    assert total_cost == 4
